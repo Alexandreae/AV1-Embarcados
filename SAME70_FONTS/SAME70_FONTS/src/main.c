@@ -2,7 +2,7 @@
  * main.c
  *
  * Created: 05/03/2019 18:00:58
- *  Author: eduardo
+ *  Author: Alexandre Almeida Edington
  */ 
 
 #include "asf.h"
@@ -142,16 +142,16 @@ int main(void) {
 			if (a == 0){
 				w = 2*pi*contador/4;
 				vel = w*d/2;
-				dtotal += (4*v);
+				dtotal += (4*vel);
 				vel = vel*3.6;
 				
 				sprintf(buffer1,"pulsos: %d",contador);
-				sprintf(buffer2,"velocidade(Km/h) %f",vel);
-				sprintf(buffer3,"distância(m) %f",dtotal);
+				sprintf(buffer2,"%f",vel);
+				sprintf(buffer3,"%f",dtotal);
 				ili9488_draw_filled_rectangle(0, 0, ILI9488_LCD_WIDTH-1, ILI9488_LCD_HEIGHT-1);
 				font_draw_text(&calibri_36, buffer1, 50, 50, 1);
 				font_draw_text(&calibri_36, buffer2, 50, 100, 1);
-				font_draw_text(&arial_72, buffer3, 50, 200, 2);
+				font_draw_text(&calibri_36, buffer3, 50, 200, 2);
 				a=1;
 				contador=0;
 			}else{
