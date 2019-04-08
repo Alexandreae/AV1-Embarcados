@@ -20,6 +20,11 @@ volatile Bool f_rtt_alarme = false;
 #define LED_IDX       8u
 #define LED_IDX_MASK  (1u << LED_IDX)
 
+#define BUT_PIO           PIOA
+#define BUT_PIO_ID        10
+#define BUT_PIO_IDX       11u
+#define BUT_PIO_IDX_MASK  (1u << BUT_PIO_IDX)
+
 
 void pin_toggle(Pio *pio, uint32_t mask);
 void io_init(void);
@@ -52,6 +57,9 @@ void pin_toggle(Pio *pio, uint32_t mask){
 void io_init(void){
 	/* led */
 	pmc_enable_periph_clk(LED_PIO_ID);
+	pmc_enable_periph_clk(BUT_PIO_ID);
+	pio_set_input(BUT_PIO,BUT_PIO_IDX_MASK,PIO_DEFAULT);
+	pio_pull_up(BUT_PIO,BUT_PIO_IDX_MASK,1);
 	pio_configure(LED_PIO, PIO_OUTPUT_0, LED_IDX_MASK, PIO_DEFAULT);
 }
 
@@ -116,18 +124,37 @@ int main(void) {
 	configure_lcd();
 	io_init();
 	int a = 0;
+	int b = 0;
+	float d = 0.650;
+	float w = 0;
+	float vel = 0;
+	float dtotal = 0;
+	float pi = 3.14;
 	f_rtt_alarme = true;
-
+	int contador = 0;
+	char buffer1[32];
+	char buffer2[32];
+	char buffer3[32];
+	
 	while (1){
 		if (f_rtt_alarme){
+			
 			if (a == 0){
+				w = 2*pi*contador/4;
+				vel = w*d/2;
+				dtotal += (4*v);
+				vel = vel*3.6;
+				
+				sprintf(buffer1,"pulsos: %d",contador);
+				sprintf(buffer2,"velocidade(Km/h) %f",vel);
+				sprintf(buffer3,"distância(m) %f",dtotal);
 				ili9488_draw_filled_rectangle(0, 0, ILI9488_LCD_WIDTH-1, ILI9488_LCD_HEIGHT-1);
-				font_draw_text(&sourcecodepro_28, "OIMUNDO", 50, 50, 1);
-				font_draw_text(&calibri_36, "Oi Marcão! #$!@", 50, 100, 1);
-				font_draw_text(&arial_72, "102456", 50, 200, 2);
+				font_draw_text(&calibri_36, buffer1, 50, 50, 1);
+				font_draw_text(&calibri_36, buffer2, 50, 100, 1);
+				font_draw_text(&arial_72, buffer3, 50, 200, 2);
 				a=1;
+				contador=0;
 			}else{
-				ili9488_draw_filled_rectangle(0, 0, ILI9488_LCD_WIDTH-1, ILI9488_LCD_HEIGHT-1);
 				a=0;
 			}
 
@@ -135,6 +162,14 @@ int main(void) {
 			uint32_t irqRTTvalue  = 4;
 			RTT_init(pllPreScale, irqRTTvalue);         
 			f_rtt_alarme = false;
+		}
+		if(pio_get(BUT_PIO,PIO_INPUT,BUT_PIO_IDX_MASK)==0){
+			if(b==0){
+				contador+=1;
+				b=1;
+			}
+		}else{
+			b=0;
 		}
 	}  
 	return 0;
