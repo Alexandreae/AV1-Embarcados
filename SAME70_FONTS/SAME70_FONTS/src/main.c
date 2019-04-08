@@ -134,7 +134,6 @@ int main(void) {
 	int contador = 0;
 	char buffer1[32];
 	char buffer2[32];
-	char buffer3[32];
 	
 	while (1){
 		if (f_rtt_alarme){
@@ -145,13 +144,11 @@ int main(void) {
 				dtotal += (4*vel);
 				vel = vel*3.6;
 				
-				sprintf(buffer1,"pulsos: %d",contador);
-				sprintf(buffer2,"%f",vel);
-				sprintf(buffer3,"%f",dtotal);
+				sprintf(buffer1,"%f Km/h",vel);
+				sprintf(buffer2,"%f m",dtotal);
 				ili9488_draw_filled_rectangle(0, 0, ILI9488_LCD_WIDTH-1, ILI9488_LCD_HEIGHT-1);
-				font_draw_text(&calibri_36, buffer1, 50, 50, 1);
-				font_draw_text(&calibri_36, buffer2, 50, 100, 1);
-				font_draw_text(&calibri_36, buffer3, 50, 200, 2);
+				font_draw_text(&calibri_36, buffer1, 50, 100, 1);
+				font_draw_text(&calibri_36, buffer2, 50, 200, 2);
 				a=1;
 				contador=0;
 			}else{
