@@ -5,7 +5,7 @@
  *  Author: eduardo
  */ 
 
-#include <asf.h>
+#include "asf.h"
 #include "tfont.h"
 #include "sourcecodepro_28.h"
 #include "calibri_36.h"
@@ -112,18 +112,25 @@ void font_draw_text(tFont *font, const char *text, int x, int y, int spacing) {
 int main(void) {
 	WDT->WDT_MR = WDT_MR_WDDIS;
 	sysclk_init();
-	io_init();
 	board_init();
-	sysclk_init();	
 	configure_lcd();
-	
+	io_init();
+	int a = 0;
 	f_rtt_alarme = true;
-	
-	font_draw_text(&sourcecodepro_28, "OIMUNDO", 50, 50, 1);
-	font_draw_text(&calibri_36, "Oi Mundo! #$!@", 50, 100, 1);
-	font_draw_text(&arial_72, "102456", 50, 200, 2);
+
 	while (1){
 		if (f_rtt_alarme){
+			if (a == 0){
+				ili9488_draw_filled_rectangle(0, 0, ILI9488_LCD_WIDTH-1, ILI9488_LCD_HEIGHT-1);
+				font_draw_text(&sourcecodepro_28, "OIMUNDO", 50, 50, 1);
+				font_draw_text(&calibri_36, "Oi Marcão! #$!@", 50, 100, 1);
+				font_draw_text(&arial_72, "102456", 50, 200, 2);
+				a=1;
+			}else{
+				ili9488_draw_filled_rectangle(0, 0, ILI9488_LCD_WIDTH-1, ILI9488_LCD_HEIGHT-1);
+				a=0;
+			}
+
 			uint16_t pllPreScale = (int) (((float) 32768) / 2.0);
 			uint32_t irqRTTvalue  = 4;
 			RTT_init(pllPreScale, irqRTTvalue);         

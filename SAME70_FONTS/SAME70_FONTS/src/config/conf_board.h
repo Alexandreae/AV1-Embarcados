@@ -38,7 +38,11 @@
 
 /* Enable ICache and DCache */
 #define CONF_BOARD_ENABLE_CACHE
+#define CONF_BOARD_UART_CONSOLE
+
 
 #define CONF_BOARD_ILI9488
 
+#define CONF_BOARD_TWIHS0
+#define CONF_BOARD_SDRAMC
 #endif /* CONF_BOARD_H */
